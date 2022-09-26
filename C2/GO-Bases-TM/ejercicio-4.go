@@ -61,13 +61,12 @@ func main() {
 	averageFunc, err := operation(average)
 	// maxFunc, err := operation(maximum)
 
-	// minValue := minFunc(10, 3, 3, 4, 10, 2, 1, 5)
-	averageValue := averageFunc(2, 10, 3, 4, 1, 2, 4, 5)
-	// maxValue := maxFunc(2, 3, 15, 4, 1, 2, 4, 5)
-
 	if err != nil {
 		fmt.Println(err.Error())
 	} else {
+		// minValue := minFunc(10, 3, 3, 4, 10, 2, 1, 5)
+		averageValue := averageFunc(2, 10, 3, 4, 1, 2, 4, 5)
+		// maxValue := maxFunc(2, 3, 15, 4, 1, 2, 4, 5)
 		fmt.Printf("El valor de la operación es: %f\n", averageValue)
 	}
 }
