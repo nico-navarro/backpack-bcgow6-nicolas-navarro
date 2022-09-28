@@ -14,4 +14,5 @@ func main() {
 	fmt.Printf("El puntero de dirección %p tiene valor %p, direccion que tiene valor de %d\n", &puntero1, puntero1, *puntero1)
 	numero = 2
 	fmt.Printf("El puntero de dirección %p tiene valor %p, direccion que tiene valor de %d\n", &puntero1, puntero1, *puntero1)
+	fmt.Printf("El numero de dirección %p tiene valor %d, lo cual no es una dirección (por consiguiente, no puedo desreferenciarlo (*numero))\n", &numero, numero)
 }
