@@ -1,3 +1,3 @@
-Nicolas Navarro | 1234
-   Gabriela Vergara      |       5230
-Juan | 1
+1 | Nicolas Navarro | 1234 | 98191231 | Calle 1
+2 | Juan Perez | 12345 | 99191511 | Calle 2
+3 | Pedro Tapia | 12346 | 99121231 | Calle 4
