@@ -1,5 +1,7 @@
 package service
 
+import "errors"
+
 type Bookings interface {
 	// Create create a new Ticket
 	Create(t Ticket) (Ticket, error)
@@ -30,8 +32,15 @@ func (b *bookings) Create(t Ticket) (Ticket, error) {
 	return Ticket{}, nil
 }
 
-func (b *bookings) Read(id int) (Ticket, error) {
-	return Ticket{}, nil
+func (b *bookings) Read(id int) (searchedTicket Ticket, err error) {
+	for _, ticket := range b.Tickets {
+		if ticket.Id == id {
+			searchedTicket = ticket
+			return
+		}
+	}
+	err = errors.New("no se encontró el id especificado")
+	return
 }
 
 func (b *bookings) Update(id int, t Ticket) (Ticket, error) {
