@@ -13,12 +13,6 @@ type File struct {
 	Path string
 }
 
-// type Ticket struct {
-// 	Id                             int
-// 	Name, Email, Destination, Date string
-// 	Price                          int
-// }
-
 func (f *File) Read() (tickets []service.Ticket, err error) {
 	file, _ := os.Open(f.Path) // NOTE: handle error
 	fscanner := bufio.NewScanner(file)
