@@ -29,6 +29,7 @@ func NewBookings(Tickets []Ticket) Bookings {
 }
 
 func (b *bookings) Create(t Ticket) (Ticket, error) {
+	b.Tickets = append(b.Tickets, t)
 	return Ticket{}, nil
 }
 
@@ -43,10 +44,27 @@ func (b *bookings) Read(id int) (searchedTicket Ticket, err error) {
 	return
 }
 
-func (b *bookings) Update(id int, t Ticket) (Ticket, error) {
-	return Ticket{}, nil
+func (b *bookings) Update(id int, t Ticket) (searchedTicket Ticket, err error) {
+	for index, ticket := range b.Tickets {
+		if ticket.Id == id {
+			b.Tickets[index] = t
+			searchedTicket = t
+			return
+		}
+	}
+	err = errors.New("no se encontró el id especificado")
+	return
 }
 
+// delete https://stackoverflow.com/questions/37334119/how-to-delete-an-element-from-a-slice-in-golang
 func (b *bookings) Delete(id int) (int, error) {
-	return 0, nil
+	for index, ticket := range b.Tickets {
+		if ticket.Id == id {
+			b.Tickets[index] = b.Tickets[len(b.Tickets)-1]
+			b.Tickets = b.Tickets[:len(b.Tickets)-1]
+			return id, nil
+		}
+	}
+	err := errors.New("no se encontró el id especificado")
+	return 0, err
 }

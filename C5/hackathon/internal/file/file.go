@@ -2,6 +2,7 @@ package file
 
 import (
 	"bufio"
+	"fmt"
 	"hackathon/internal/service"
 	"os"
 	"strconv"
@@ -38,6 +39,12 @@ func (f *File) Read() (tickets []service.Ticket, err error) {
 	return
 }
 
-func (f *File) Write(service.Ticket) error {
-	return nil
+func (f *File) Write(ticket service.Ticket) (err error) {
+	file, err := os.OpenFile(f.Path, os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
+	if err != nil {
+		return
+	}
+	line := fmt.Sprintf("%d,%s,%s,%s,%s,%d", ticket.Id, ticket.Name, ticket.Email, ticket.Destination, ticket.Date, ticket.Price)
+	file.WriteString(line)
+	return
 }
