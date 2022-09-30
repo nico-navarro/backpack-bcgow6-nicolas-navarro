@@ -44,7 +44,15 @@ func (f *File) Write(ticket service.Ticket) (err error) {
 	if err != nil {
 		return
 	}
-	line := fmt.Sprintf("%d,%s,%s,%s,%s,%d", ticket.Id, ticket.Name, ticket.Email, ticket.Destination, ticket.Date, ticket.Price)
+	line := fmt.Sprintf("%d,%s,%s,%s,%s,%d\n", ticket.Id, ticket.Name, ticket.Email, ticket.Destination, ticket.Date, ticket.Price)
 	file.WriteString(line)
+	return
+}
+
+func (f *File) WriteAll(tickets []service.Ticket) (err error) {
+	_, err = os.Create(f.Path)
+	for _, ticket := range tickets {
+		f.Write(ticket)
+	}
 	return
 }

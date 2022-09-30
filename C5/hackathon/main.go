@@ -36,12 +36,11 @@ func main() {
 		Price:       1000,
 	}
 	bookings.Update(1001, newData)
-	updatedTicket, _ := bookings.Read(1001) // NOTE: handle error
-	fmt.Println(updatedTicket)
 
 	//DELETE
-	fmt.Println(bookings)
-	deletedTicket, _ := bookings.Delete(998)
-	fmt.Println(deletedTicket) // NOTE: handle error
+	bookings.Delete(998)
 
+	//Rewrite csv
+	b := bookings.GetBooking()
+	csvFile.WriteAll(b.Tickets)
 }

@@ -11,6 +11,8 @@ type Bookings interface {
 	Update(id int, t Ticket) (Ticket, error)
 	// Delete delete a Ticket by id
 	Delete(id int) (int, error)
+
+	GetBooking() *bookings
 }
 
 type bookings struct {
@@ -26,6 +28,11 @@ type Ticket struct {
 // NewBookings creates a new bookings service
 func NewBookings(Tickets []Ticket) Bookings {
 	return &bookings{Tickets: Tickets}
+}
+
+// Getter of bookings
+func (b *bookings) GetBooking() *bookings {
+	return b
 }
 
 func (b *bookings) Create(t Ticket) (Ticket, error) {
