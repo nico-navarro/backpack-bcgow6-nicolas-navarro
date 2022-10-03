@@ -1,6 +1,35 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"encoding/json"
+	"io/ioutil"
+
+	"github.com/gin-gonic/gin"
+)
+
+type User struct {
+	Id     int
+	Name   string
+	Email  string
+	Age    int
+	Height string
+	Active bool
+	Date   string
+}
+
+type Users struct {
+	Users []User
+}
+
+func GetAll(c *gin.Context) {
+	file, _ := ioutil.ReadFile("users.json")
+
+	users := []User{}
+
+	_ = json.Unmarshal([]byte(file), &users)
+
+	c.JSON(200, users)
+}
 
 func main() {
 	// ROUTER
@@ -12,6 +41,20 @@ func main() {
 			"message": "Hola Nico!",
 		})
 	})
+
+	// Get All Products
+	router.GET("/products", func(c *gin.Context) {
+		file, _ := ioutil.ReadFile("users.json")
+
+		users := []User{}
+
+		_ = json.Unmarshal([]byte(file), &users)
+
+		c.JSON(200, users)
+	})
+
+	router.GET("/products2", GetAll) //using handler in another function
+
 	// Corremos nuestro servidor sobre el puerto 8080
 	router.Run()
 }
