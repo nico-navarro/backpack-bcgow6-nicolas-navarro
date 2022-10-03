@@ -43,17 +43,7 @@ func main() {
 	})
 
 	// Get All Products
-	router.GET("/products", func(c *gin.Context) {
-		file, _ := ioutil.ReadFile("users.json")
-
-		users := []User{}
-
-		_ = json.Unmarshal([]byte(file), &users)
-
-		c.JSON(200, users)
-	})
-
-	router.GET("/products2", GetAll) //using handler in another function
+	router.GET("/products", GetAll)
 
 	// Corremos nuestro servidor sobre el puerto 8080
 	router.Run()
