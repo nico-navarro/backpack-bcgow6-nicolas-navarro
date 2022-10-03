@@ -12,9 +12,18 @@
         "id": 2, 
         "name": "Gabi", 
         "email": "gabi@mercadolibre.cl",
-        "age": 24,
+        "age": 25,
         "height": 170,
         "active": true,
         "date": "10-11-2010"
+    },
+    {
+        "id": 3, 
+        "name": "Juan", 
+        "email": "juan@mercadolibre.cl",
+        "age": 24,
+        "height": 175,
+        "active": true,
+        "date": "25-11-2011"
     }
 ]
