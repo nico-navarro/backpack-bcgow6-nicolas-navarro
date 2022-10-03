@@ -42,8 +42,8 @@ func main() {
 		})
 	})
 
-	// Get All Products
-	router.GET("/products", GetAll)
+	// Get All Users
+	router.GET("/users", GetAll)
 
 	// Corremos nuestro servidor sobre el puerto 8080
 	router.Run()
