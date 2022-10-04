@@ -6,12 +6,12 @@ import (
 
 type User struct {
 	Id     int
-	Name   string
-	Email  string
-	Age    int
-	Height int
-	Active bool
-	Date   string
+	Name   string `binding:"required"`
+	Email  string `binding:"required"`
+	Age    int    `binding:"required"`
+	Height int    `binding:"required"`
+	Active bool   `binding:"required"`
+	Date   string `binding:"required"`
 }
 
 var users []User = []User{}
@@ -19,7 +19,7 @@ var users []User = []User{}
 func Create(c *gin.Context) {
 	var user User
 	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(404, gin.H{
+		c.JSON(400, gin.H{
 			"error": err.Error(),
 		})
 		return
