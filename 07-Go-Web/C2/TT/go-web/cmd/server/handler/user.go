@@ -15,17 +15,17 @@ type request struct {
 	Date   string `binding:"required"`
 }
 
-type User struct {
+type UserController struct {
 	service users.Service
 }
 
-func NewUser(u users.Service) *User {
-	return &User{
+func NewUserController(u users.Service) *UserController {
+	return &UserController{
 		service: u,
 	}
 }
 
-func (c *User) GetAll(ctx *gin.Context) {
+func (c *UserController) GetAll(ctx *gin.Context) {
 	token := ctx.Request.Header.Get("token")
 	if token != "123456" {
 		ctx.JSON(401, gin.H{
@@ -44,7 +44,7 @@ func (c *User) GetAll(ctx *gin.Context) {
 	ctx.JSON(200, users)
 }
 
-func (c *User) Store(ctx *gin.Context) {
+func (c *UserController) Store(ctx *gin.Context) {
 	token := ctx.Request.Header.Get("token")
 	if token != "123456" {
 		ctx.JSON(401, gin.H{"error": "token inválido"})

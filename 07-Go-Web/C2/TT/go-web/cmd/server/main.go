@@ -10,7 +10,7 @@ import (
 func main() {
 	userRepository := users.NewRepository()
 	userService := users.NewService(userRepository)
-	userController := handler.NewUser(userService)
+	userController := handler.NewUserController(userService)
 
 	router := gin.Default()
 
