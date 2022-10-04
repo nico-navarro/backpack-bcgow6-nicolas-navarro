@@ -25,46 +25,42 @@ func NewUser(u users.Service) *User {
 	}
 }
 
-func (c *User) GetAll() gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-		token := ctx.Request.Header.Get("token")
-		if token != "123456" {
-			ctx.JSON(401, gin.H{
-				"error": "token inválido",
-			})
-			return
-		}
-
-		users, err := c.service.GetAll()
-		if err != nil {
-			ctx.JSON(404, gin.H{
-				"error": err.Error(),
-			})
-			return
-		}
-		ctx.JSON(200, users)
+func (c *User) GetAll(ctx *gin.Context) {
+	token := ctx.Request.Header.Get("token")
+	if token != "123456" {
+		ctx.JSON(401, gin.H{
+			"error": "token inválido",
+		})
+		return
 	}
+
+	users, err := c.service.GetAll()
+	if err != nil {
+		ctx.JSON(404, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	ctx.JSON(200, users)
 }
 
-func (c *User) Store() gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-		token := ctx.Request.Header.Get("token")
-		if token != "123456" {
-			ctx.JSON(401, gin.H{"error": "token inválido"})
-			return
-		}
-		var req request
-		if err := ctx.Bind(&req); err != nil {
-			ctx.JSON(404, gin.H{
-				"error": err.Error(),
-			})
-			return
-		}
-		user, err := c.service.Store(req.Name, req.Email, req.Age, req.Height, req.Active, req.Date)
-		if err != nil {
-			ctx.JSON(404, gin.H{"error": err.Error()})
-			return
-		}
-		ctx.JSON(200, user)
+func (c *User) Store(ctx *gin.Context) {
+	token := ctx.Request.Header.Get("token")
+	if token != "123456" {
+		ctx.JSON(401, gin.H{"error": "token inválido"})
+		return
 	}
+	var req request
+	if err := ctx.Bind(&req); err != nil {
+		ctx.JSON(404, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	user, err := c.service.Store(req.Name, req.Email, req.Age, req.Height, req.Active, req.Date)
+	if err != nil {
+		ctx.JSON(404, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(200, user)
 }

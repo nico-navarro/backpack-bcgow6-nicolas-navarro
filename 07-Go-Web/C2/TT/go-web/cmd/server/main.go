@@ -15,8 +15,8 @@ func main() {
 	router := gin.Default()
 
 	userRouter := router.Group("/users")
-	userRouter.GET("/", userController.GetAll())
-	userRouter.POST("/", userController.Store())
+	userRouter.GET("/", userController.GetAll)
+	userRouter.POST("/", userController.Store)
 
 	router.Run()
 }
