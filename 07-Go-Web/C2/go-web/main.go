@@ -1,12 +1,17 @@
 package main
 
 import (
+	"errors"
+	"fmt"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
 type User struct {
 	Id     int
-	Name   string `binding:"required"`
+	Name   string `json:"name" binding:"required"`
 	Email  string `binding:"required"`
 	Age    int    `binding:"required"`
 	Height int    `binding:"required"`
@@ -28,9 +33,17 @@ func Create(c *gin.Context) {
 	}
 
 	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(400, gin.H{
-			"error": err.Error(),
-		})
+		var ve validator.ValidationErrors
+		if errors.As(err, &ve) { //si es de validation errors entra aqui, lo personalizamos
+			errorMessages := []string{}
+			for _, e := range err.(validator.ValidationErrors) {
+				errorMessage := fmt.Sprintf("el campo %s es %s", e.Field(), e.ActualTag())
+				errorMessages = append(errorMessages, errorMessage)
+			}
+			c.JSON(http.StatusBadRequest, errorMessages)
+			return
+		}
+		c.JSON(http.StatusBadRequest, err.Error()) //el resto de errors queda default
 		return
 	}
 
