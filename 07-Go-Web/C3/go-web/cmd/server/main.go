@@ -19,6 +19,7 @@ func main() {
 	userRouter.POST("/", userController.Store)
 	userRouter.PUT("/:id", userController.Update)
 	userRouter.DELETE("/:id", userController.Delete)
+	userRouter.PATCH("/:id", userController.Patch)
 
 	router.Run()
 }

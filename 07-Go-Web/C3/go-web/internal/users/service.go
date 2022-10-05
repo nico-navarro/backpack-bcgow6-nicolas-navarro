@@ -5,6 +5,7 @@ type Service interface {
 	Store(name string, email string, age int, height int, active bool, date string) (User, error)
 	Update(id int, name string, email string, age int, height int, active bool, date string) (User, error)
 	Delete(id int) (User, error)
+	Patch(id int, name string, email string, age *int, height *int, active *bool, date string) (User, error)
 }
 
 type service struct {
@@ -52,6 +53,14 @@ func (s *service) Update(id int, name string, email string, age int, height int,
 
 func (s *service) Delete(id int) (User, error) {
 	user, err := s.repository.Delete(id)
+	if err != nil {
+		return User{}, err
+	}
+	return user, nil
+}
+
+func (s *service) Patch(id int, name string, email string, age *int, height *int, active *bool, date string) (User, error) {
+	user, err := s.repository.Patch(id, name, email, age, height, active, date)
 	if err != nil {
 		return User{}, err
 	}
