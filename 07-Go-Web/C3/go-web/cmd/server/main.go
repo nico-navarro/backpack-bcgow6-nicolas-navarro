@@ -5,9 +5,12 @@ import (
 	"go-web/internal/users"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	_ = godotenv.Load()
+
 	userRepository := users.NewRepository()
 	userService := users.NewService(userRepository)
 	userController := handler.NewUserController(userService)
