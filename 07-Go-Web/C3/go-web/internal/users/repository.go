@@ -21,6 +21,7 @@ type Repository interface {
 	Store(id int, name string, email string, age int, height int, active *bool, date string) (User, error)
 	LastID() (int, error)
 	Update(id int, name string, email string, age int, height int, active *bool, date string) (User, error)
+	Delete(id int) (User, error)
 }
 
 type repository struct{} //struct implementa los metodos de la interfaz
@@ -54,4 +55,16 @@ func (r *repository) Update(id int, name string, email string, age int, height i
 		}
 	}
 	return updatedUser, errors.New("No existe el ID especificado")
+}
+
+func (r *repository) Delete(id int) (User, error) {
+	deletedUser := User{}
+	for i, user := range users {
+		if user.Id == id {
+			deletedUser = users[i]
+			users = append(users[:i], users[i+1:]...)
+			return deletedUser, nil
+		}
+	}
+	return deletedUser, errors.New("No existe el ID especificado")
 }

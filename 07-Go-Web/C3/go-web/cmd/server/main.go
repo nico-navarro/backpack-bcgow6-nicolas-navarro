@@ -18,6 +18,7 @@ func main() {
 	userRouter.GET("/", userController.GetAll)
 	userRouter.POST("/", userController.Store)
 	userRouter.PUT("/:id", userController.Update)
+	userRouter.DELETE("/:id", userController.Delete)
 
 	router.Run()
 }

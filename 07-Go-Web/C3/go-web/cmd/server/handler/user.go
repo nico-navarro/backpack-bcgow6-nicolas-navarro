@@ -80,7 +80,7 @@ func (c *UserController) Update(ctx *gin.Context) {
 		return
 	}
 
-	users, err := c.service.Update(id, req.Name, req.Email, req.Age, req.Height, req.Active, req.Date)
+	user, err := c.service.Update(id, req.Name, req.Email, req.Age, req.Height, req.Active, req.Date)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{
 			"error": err.Error(),
@@ -88,5 +88,21 @@ func (c *UserController) Update(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(200, users)
+	ctx.JSON(200, user)
+}
+
+func (c *UserController) Delete(ctx *gin.Context) {
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "ID Not Found"})
+		return
+	}
+
+	user, err := c.service.Delete(id)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(200, user)
 }
