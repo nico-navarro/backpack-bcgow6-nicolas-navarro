@@ -1,6 +1,9 @@
 package users
 
-import "errors"
+import (
+	"errors"
+	"go-web/pkg/store"
+)
 
 type User struct {
 	Id     int
@@ -12,9 +15,6 @@ type User struct {
 	Date   string `binding:"required"`
 }
 
-var users []User
-var lastID int
-
 // ***Importado**//
 type Repository interface {
 	GetAll() ([]User, error)
@@ -25,33 +25,62 @@ type Repository interface {
 	Patch(id int, name string, email string, age *int, height *int, active *bool, date string) (User, error)
 }
 
-type repository struct{} //struct implementa los metodos de la interfaz
+type repository struct {
+	db store.Store
+}
 
-func NewRepository() Repository {
-	return &repository{}
+func NewRepository(db store.Store) Repository {
+	return &repository{
+		db: db,
+	}
 }
 
 func (r *repository) Store(id int, name string, email string, age int, height int, active bool, date string) (User, error) {
+	var users []User
+	r.db.Read(&users)
+
 	user := User{id, name, email, age, height, active, date}
 	users = append(users, user)
-	lastID = user.Id
+	err := r.db.Write(users)
+	if err != nil {
+		return User{}, err
+	}
 	return user, nil
 }
 
 func (r *repository) GetAll() ([]User, error) {
+	var users []User
+	r.db.Read(&users)
 	return users, nil
 }
 
 func (r *repository) LastID() (int, error) {
-	return lastID, nil
+	var users []User
+	err := r.db.Read(&users)
+	if err != nil {
+		return 0, err
+	}
+	if len(users) == 0 {
+		return 0, nil
+	}
+	return users[len(users)-1].Id, nil
 }
 
 func (r *repository) Update(id int, name string, email string, age int, height int, active bool, date string) (User, error) {
+	// Load users
+	var users []User
+	r.db.Read(&users)
+
 	updatedUser := User{}
 	for i, user := range users {
 		if user.Id == id {
 			updatedUser = User{id, name, email, age, height, active, date}
 			users[i] = updatedUser
+			//Save users
+			err := r.db.Write(users)
+			if err != nil {
+				return User{}, err
+			}
 			return updatedUser, nil
 		}
 	}
@@ -59,11 +88,20 @@ func (r *repository) Update(id int, name string, email string, age int, height i
 }
 
 func (r *repository) Delete(id int) (User, error) {
+	// Load users
+	var users []User
+	r.db.Read(&users)
+
 	deletedUser := User{}
 	for i, user := range users {
 		if user.Id == id {
 			deletedUser = users[i]
 			users = append(users[:i], users[i+1:]...)
+			//Save users
+			err := r.db.Write(users)
+			if err != nil {
+				return User{}, err
+			}
 			return deletedUser, nil
 		}
 	}
@@ -71,6 +109,10 @@ func (r *repository) Delete(id int) (User, error) {
 }
 
 func (r *repository) Patch(id int, name string, email string, age *int, height *int, active *bool, date string) (User, error) {
+	// Load users
+	var users []User
+	r.db.Read(&users)
+
 	for i, user := range users {
 		if user.Id == id {
 			if name != "" {
@@ -90,6 +132,11 @@ func (r *repository) Patch(id int, name string, email string, age *int, height *
 			}
 			if date != "" {
 				users[i].Date = date
+			}
+			//Save users
+			err := r.db.Write(users)
+			if err != nil {
+				return User{}, err
 			}
 			return users[i], nil
 		}

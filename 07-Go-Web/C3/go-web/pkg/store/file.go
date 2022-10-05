@@ -10,7 +10,7 @@ type Store interface {
 	Write(data interface{}) error
 }
 
-func NewStore(pathFile string, fileName string) Store {
+func NewStore(fileName string) Store {
 	return &fileStore{fileName}
 }
 

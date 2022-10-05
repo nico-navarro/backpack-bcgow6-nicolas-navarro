@@ -3,6 +3,7 @@ package main
 import (
 	"go-web/cmd/server/handler"
 	"go-web/internal/users"
+	"go-web/pkg/store"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -11,7 +12,8 @@ import (
 func main() {
 	_ = godotenv.Load()
 
-	userRepository := users.NewRepository()
+	db := store.NewStore("./products.json")
+	userRepository := users.NewRepository(db)
 	userService := users.NewService(userRepository)
 	userController := handler.NewUserController(userService)
 
