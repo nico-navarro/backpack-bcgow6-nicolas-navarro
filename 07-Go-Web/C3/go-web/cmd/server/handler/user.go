@@ -11,8 +11,8 @@ import (
 type request struct {
 	Name   string `json:"name" binding:"required"`
 	Email  string `binding:"required"`
-	Age    int    `binding:"required"`
-	Height int    `binding:"required"`
+	Age    *int   `binding:"required"`
+	Height *int   `binding:"required"`
 	Active *bool  `binding:"required"`
 	Date   string `binding:"required"`
 }
@@ -59,7 +59,7 @@ func (c *UserController) Store(ctx *gin.Context) {
 		})
 		return
 	}
-	user, err := c.service.Store(req.Name, req.Email, req.Age, req.Height, req.Active, req.Date)
+	user, err := c.service.Store(req.Name, req.Email, *req.Age, *req.Height, *req.Active, req.Date)
 	if err != nil {
 		ctx.JSON(404, gin.H{"error": err.Error()})
 		return
@@ -80,7 +80,7 @@ func (c *UserController) Update(ctx *gin.Context) {
 		return
 	}
 
-	user, err := c.service.Update(id, req.Name, req.Email, req.Age, req.Height, req.Active, req.Date)
+	user, err := c.service.Update(id, req.Name, req.Email, *req.Age, *req.Height, *req.Active, req.Date)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{
 			"error": err.Error(),

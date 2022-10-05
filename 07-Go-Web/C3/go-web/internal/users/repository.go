@@ -8,7 +8,7 @@ type User struct {
 	Email  string `binding:"required"`
 	Age    int    `binding:"required"`
 	Height int    `binding:"required"`
-	Active *bool  `binding:"required"`
+	Active bool   `binding:"required"`
 	Date   string `binding:"required"`
 }
 
@@ -18,9 +18,9 @@ var lastID int
 // ***Importado**//
 type Repository interface {
 	GetAll() ([]User, error)
-	Store(id int, name string, email string, age int, height int, active *bool, date string) (User, error)
+	Store(id int, name string, email string, age int, height int, active bool, date string) (User, error)
 	LastID() (int, error)
-	Update(id int, name string, email string, age int, height int, active *bool, date string) (User, error)
+	Update(id int, name string, email string, age int, height int, active bool, date string) (User, error)
 	Delete(id int) (User, error)
 }
 
@@ -30,7 +30,7 @@ func NewRepository() Repository {
 	return &repository{}
 }
 
-func (r *repository) Store(id int, name string, email string, age int, height int, active *bool, date string) (User, error) {
+func (r *repository) Store(id int, name string, email string, age int, height int, active bool, date string) (User, error) {
 	user := User{id, name, email, age, height, active, date}
 	users = append(users, user)
 	lastID = user.Id
@@ -45,7 +45,7 @@ func (r *repository) LastID() (int, error) {
 	return lastID, nil
 }
 
-func (r *repository) Update(id int, name string, email string, age int, height int, active *bool, date string) (User, error) {
+func (r *repository) Update(id int, name string, email string, age int, height int, active bool, date string) (User, error) {
 	updatedUser := User{}
 	for i, user := range users {
 		if user.Id == id {
