@@ -2,6 +2,7 @@ package handler
 
 import (
 	"go-web/internal/users"
+	"go-web/pkg/web"
 	"net/http"
 	"os"
 	"strconv"
@@ -40,103 +41,91 @@ func NewUserController(u users.Service) *UserController {
 func (c *UserController) GetAll(ctx *gin.Context) {
 	token := ctx.Request.Header.Get("token")
 	if token != os.Getenv("TOKEN") {
-		ctx.JSON(401, gin.H{
-			"error": "token inválido",
-		})
+		ctx.JSON(401, web.NewResponse(401, nil, "token inválido"))
 		return
 	}
 
 	users, err := c.service.GetAll()
 	if err != nil {
-		ctx.JSON(404, gin.H{
-			"error": err.Error(),
-		})
+		ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 		return
 	}
-	ctx.JSON(200, users)
+	ctx.JSON(200, web.NewResponse(200, users, ""))
 }
 
 func (c *UserController) Store(ctx *gin.Context) {
 	token := ctx.Request.Header.Get("token")
 	if token != os.Getenv("TOKEN") {
-		ctx.JSON(401, gin.H{"error": "token inválido"})
+		ctx.JSON(401, web.NewResponse(401, nil, "token inválido"))
 		return
 	}
 	var req request
-	if err := ctx.Bind(&req); err != nil {
-		ctx.JSON(404, gin.H{
-			"error": err.Error(),
-		})
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 		return
 	}
 	user, err := c.service.Store(req.Name, req.Email, *req.Age, *req.Height, *req.Active, req.Date)
 	if err != nil {
-		ctx.JSON(404, gin.H{"error": err.Error()})
+		ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 		return
 	}
-	ctx.JSON(200, user)
+	ctx.JSON(200, web.NewResponse(200, user, ""))
 }
 
 func (c *UserController) Update(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "ID Not Found"})
+		ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, "ID Not Found"))
 		return
 	}
 
 	var req request
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 		return
 	}
 
 	user, err := c.service.Update(id, req.Name, req.Email, *req.Age, *req.Height, *req.Active, req.Date)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound, gin.H{
-			"error": err.Error(),
-		})
+		ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusNotFound, nil, err.Error()))
 		return
 	}
-
-	ctx.JSON(200, user)
+	ctx.JSON(200, web.NewResponse(200, user, ""))
 }
 
 func (c *UserController) Delete(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "ID Not Found"})
+		ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, "ID Not Found"))
 		return
 	}
 
 	user, err := c.service.Delete(id)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusNotFound, nil, err.Error()))
 		return
 	}
 
-	ctx.JSON(200, user)
+	ctx.JSON(200, web.NewResponse(200, user, ""))
 }
 
 func (c *UserController) Patch(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "ID Not Found"})
+		ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, "ID Not Found"))
 		return
 	}
 
 	var req patchRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 		return
 	}
 
 	user, err := c.service.Patch(id, req.Name, req.Email, req.Age, req.Height, req.Active, req.Date)
 	if err != nil {
-		ctx.JSON(http.StatusNotFound, gin.H{
-			"error": err.Error(),
-		})
+		ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusNotFound, nil, err.Error()))
 		return
 	}
-
-	ctx.JSON(200, user)
+	ctx.JSON(200, web.NewResponse(200, user, ""))
 }
