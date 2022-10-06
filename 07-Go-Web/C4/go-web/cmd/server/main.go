@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"go-web/cmd/server/handler"
 	"go-web/internal/users"
 	"go-web/pkg/store"
@@ -13,6 +14,18 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
+
+func DummyMiddleware(c *gin.Context) {
+	fmt.Println("Im a dummy!")
+	// Pass on to the next-in-chain
+	c.Next()
+}
+
+func AnotherMiddleware(c *gin.Context) {
+	fmt.Println("Im another dummy!")
+	// Pass on to the next-in-chain
+	c.Next()
+}
 
 // @title MELI Bootcamp API
 // @version 1.0
@@ -35,10 +48,12 @@ func main() {
 	docs.SwaggerInfo.Host = os.Getenv("HOST")
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
+	router.Use(DummyMiddleware) // se ejecuta en todas las que siguen hacia abajo
+
 	userRouter := router.Group("/users")
 	userRouter.GET("/", userController.GetAll)
-	userRouter.POST("/", userController.Store)
-	userRouter.PUT("/:id", userController.Update)
+	userRouter.POST("/", AnotherMiddleware, userController.Store)    //AnotherMiddleware se ejecuta antes de Store
+	userRouter.PUT("/:id", userController.Update, AnotherMiddleware) //AnotherMiddleware se ejecuta después de Update
 	userRouter.DELETE("/:id", userController.Delete)
 	userRouter.PATCH("/:id", userController.Patch)
 
