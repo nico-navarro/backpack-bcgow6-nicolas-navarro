@@ -38,6 +38,14 @@ func NewUserController(u users.Service) *UserController {
 	}
 }
 
+// ListUsers godoc
+// @Summary List users
+// @Tags Users
+// @Description get users
+// @Produce  json
+// @Param token header string true "token"
+// @Success 200 {object} web.Response
+// @Router /users [get]
 func (c *UserController) GetAll(ctx *gin.Context) {
 	token := ctx.Request.Header.Get("token")
 	if token != os.Getenv("TOKEN") {
