@@ -10,7 +10,9 @@ type StubStore struct {
 }
 
 func (s StubStore) Read(data interface{}) error {
-	data = []User{
+	// Versión 1: usando type assertion y desreferenciando
+	users := data.(*[]User)
+	stubData := []User{
 		{
 			Id:     1,
 			Name:   "Nico",
@@ -30,7 +32,33 @@ func (s StubStore) Read(data interface{}) error {
 			Date:   "25-11-2012",
 		},
 	}
+	*users = stubData
 	return nil
+
+	// Versión 2: json Marshall y Unmarshall
+	// stubData := []User{
+	// 	{
+	// 		Id:     1,
+	// 		Name:   "Nico",
+	// 		Email:  "nico@mercadolibre.cl",
+	// 		Age:    1,
+	// 		Height: 1293,
+	// 		Active: true,
+	// 		Date:   "25-11-2012",
+	// 	},
+	// 	{
+	// 		Id:     2,
+	// 		Name:   "Gabi",
+	// 		Email:  "gabi@mercadolibre.cl",
+	// 		Age:    1,
+	// 		Height: 1293,
+	// 		Active: true,
+	// 		Date:   "25-11-2012",
+	// 	},
+	// }
+	// stubDataB, _ := json.Marshal(stubData)
+	// json.Unmarshal(stubDataB, data)
+	// return nil
 }
 
 func (s StubStore) Write(data interface{}) error {
