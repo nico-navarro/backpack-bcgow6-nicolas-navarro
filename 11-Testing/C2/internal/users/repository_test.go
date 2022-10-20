@@ -65,7 +65,7 @@ func (s StubStore) Write(data interface{}) error {
 	return nil
 }
 
-func TestFindByName(t *testing.T) {
+func TestGetAll(t *testing.T) {
 	//arrange
 	myStubStore := StubStore{}
 	repo := NewRepository(myStubStore)
