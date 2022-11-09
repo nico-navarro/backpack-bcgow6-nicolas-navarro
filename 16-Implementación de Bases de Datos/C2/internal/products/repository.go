@@ -20,15 +20,13 @@ type repository struct {
 	db *sql.DB
 }
 
-/*
-	Ejercicio 2 - Replicar Store()
+const (
+	GET_BY_NAME = "SELECT id, name, type, count, price FROM products WHERE name = ?;"
+	STORE       = "INSERT INTO products (name, type, count, price) VALUES (?,?,?,?)"
+)
 
-Tomar el ejemplo visto en la clase y diseñar el método Store():
-Puede tomar de ejemplo la definición del método Store visto en clase para incorporarlo en la interfaz.
-Implementar el método Store.
-*/
 func (r *repository) Store(p domains.Product) (int, error) {
-	stmt, err := r.db.Prepare("INSERT INTO products (name, type, count, price) VALUES (?,?,?,?)")
+	stmt, err := r.db.Prepare(STORE)
 	if err != nil {
 		return 0, fmt.Errorf("error al preparar la consulta - error %v", err)
 	}
@@ -47,15 +45,8 @@ func (r *repository) Store(p domains.Product) (int, error) {
 	return int(id), nil
 }
 
-/*
-	Ejercicio 1 - Implementar GetByName()
-
-Desarrollar un método en el repositorio que permita hacer búsquedas de un producto por nombre. Para lograrlo se deberá:
-Diseñar interfaz “Repository” en la que exista un método GetByName() que reciba por parámetro un string y retorna una estructura del tipo Product.
-Implementar el método de forma que con el string recibido lo use para buscar en la DB por el campo “name”.
-*/
 func (r *repository) GetByName(name string) (domains.Product, error) {
-	stmt, err := r.db.Prepare("SELECT id, name, type, count, price FROM products WHERE name = ?;")
+	stmt, err := r.db.Prepare(GET_BY_NAME)
 	if err != nil {
 		return domains.Product{}, fmt.Errorf("error al preparar la consulta - error %v", err)
 	}
